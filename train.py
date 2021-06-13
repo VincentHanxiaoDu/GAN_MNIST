@@ -5,9 +5,18 @@ import numpy as np
 from tqdm import tqdm
 
 
-def train_model(gan_mnist: GAN_MNIST, train_images, batch_size=256, epochs=50):
+def train_model(gan_mnist: GAN_MNIST, train_images, batch_size=256, epochs=50, 
+                load_weights=False):
     train_logger = logging.getLogger("Train")
     train_logger.setLevel(LOG_LEVEL)
+    if load_weights:
+        train_logger.info("Loading weights from previous checkpoint.")
+        if os.path.exists(CHECKPOINT_PREFIX):
+            gan_mnist.load_weights(CHECKPOINT_PREFIX)
+            train_logger.info(
+                "Weights were successfully loaded from previous checkpoint!")
+        else:
+            train_logger.warning("Previous checkpoint not found!")
 
     N = train_images.shape[0]
     train_logger.info(f"Training on {N} samples.")
@@ -32,7 +41,7 @@ def train_model(gan_mnist: GAN_MNIST, train_images, batch_size=256, epochs=50):
 if __name__ == "__main__":
     # Load MNIST train images
     (train_images, _), (_, _) = tf.keras.datasets.mnist.load_data()
-    
+
     # preprocessing
     train_images = tf.expand_dims(
         train_images, axis=-1).numpy().astype(np.float32)/255.
@@ -40,8 +49,8 @@ if __name__ == "__main__":
     # visualize_images(train_images[0:36], cmap="gray")
 
     # Build model
-    latent_dim = 100
-    gan_mnist = GAN_MNIST(latent_dim)
+    noise_dim = 100
+    gan_mnist = GAN_MNIST(noise_dim)
 
     # Train
-    train_model(gan_mnist, train_images)
+    train_model(gan_mnist, train_images, epochs=50, load_weights=True)

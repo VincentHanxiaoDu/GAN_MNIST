@@ -20,7 +20,7 @@ def make_generator_model():
 
         Reshape((7, 7, 256)),
         
-        Conv2DTranspose(2*base_num_filters, (5, 5), strides=(1, 1)),
+        Conv2DTranspose(2*base_num_filters, (5, 5), strides=(2, 2)),
         BatchNormalization(),
         LeakyReLU(),
 
@@ -28,7 +28,7 @@ def make_generator_model():
         BatchNormalization(),
         LeakyReLU(),
 
-        Conv2DTranspose(1, (5, 5), strides=(2, 2),
+        Conv2DTranspose(1, (3, 3), strides=(1, 1),
                         activation=tf.keras.activations.tanh),
     ])
 
@@ -50,6 +50,10 @@ def make_discriminator_model():
         Dropout(0.2),
 
         Conv2D(2*base_num_filters, (5, 5), strides=(2, 2)),
+        LeakyReLU(),
+        Dropout(0.2),
+
+        Conv2D(4*base_num_filters, (3, 3), strides=(2, 2)),
         LeakyReLU(),
         Dropout(0.2),
 
