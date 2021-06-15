@@ -49,8 +49,8 @@ if __name__ == "__main__":
     # visualize_images(train_images[0:36], cmap="gray")
 
     # Build model
-    noise_dim = 100
-    gan_mnist = GAN_MNIST(noise_dim)
+    input_noise_dim = 100
+    gan_mnist = GAN_MNIST(input_noise_dim)
 
     # Train
     train_model(gan_mnist, train_images, epochs=50, load_weights=True)

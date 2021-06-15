@@ -77,9 +77,9 @@ def generator_loss(fake_pred):
 
 
 class GAN_MNIST(tf.keras.Model):
-    def __init__(self, latent_dim):
+    def __init__(self, input_noise_dim):
         super().__init__()
-        self.latent_dim = latent_dim
+        self.input_noise_dim = input_noise_dim
         self.generator = make_generator_model()
         self.discriminator = make_discriminator_model()
         self.generator_optimizer = tf.keras.optimizers.Adam(1e-4)
@@ -88,10 +88,10 @@ class GAN_MNIST(tf.keras.Model):
     @tf.function
     def train_step(self, real_batched_images):
         batch_size = real_batched_images.shape[0]
-        latent_inputs = tf.random.normal((batch_size, self.latent_dim))
+        input_noise = tf.random.normal((batch_size, self.input_noise_dim))
 
         with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
-            generated_images = self.generator(latent_inputs, training=True)
+            generated_images = self.generator(input_noise, training=True)
             real_pred = self.discriminator(real_batched_images, training=True)
             fake_pred = self.discriminator(generated_images, training=True)
 
@@ -110,5 +110,5 @@ class GAN_MNIST(tf.keras.Model):
 
         return gen_loss, disc_loss
     
-    def generate_images(self, latent_inputs):
-        return self.generator(latent_inputs, training=False)
+    def generate_images(self, noise_inputs):
+        return self.generator(noise_inputs, training=False)
