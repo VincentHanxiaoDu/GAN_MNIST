@@ -25,7 +25,7 @@ def train_model(gan_mnist: GAN_MNIST, train_images, batch_size=256, epochs=50,
         gen_loss_history = []
         disc_loss_history = []
         for index_start in tqdm(range(0, N, batch_size)):
-            index_end = min(N+1, index_start + batch_size)
+            index_end = min(N, index_start + batch_size)
             batched_images = train_images[index_start:index_end]
             gen_loss, disc_loss = gan_mnist.train_step(batched_images)
             gen_loss_history.append(gen_loss)
@@ -36,7 +36,7 @@ def train_model(gan_mnist: GAN_MNIST, train_images, batch_size=256, epochs=50,
             f"Average discriminator loss of the epoch: {np.array(disc_loss).mean()}")
         gan_mnist.save_weights(CHECKPOINT_PREFIX)
     train_logger.info("Model trained successfully!")
-
+    return gen_loss_history, disc_loss_history
 
 if __name__ == "__main__":
     # Load MNIST train images
