@@ -19,7 +19,7 @@ def make_generator_model():
         LeakyReLU(),
 
         Reshape((7, 7, 256)),
-        
+
         Conv2DTranspose(2*base_num_filters, (5, 5), strides=(2, 2)),
         BatchNormalization(),
         LeakyReLU(),
@@ -63,7 +63,9 @@ def make_discriminator_model():
 
     return discriminator
 
+
 binary_crossentropy = BinaryCrossentropy(from_logits=False)
+
 
 def discriminator_loss(real_pred, fake_pred):
     real_loss = binary_crossentropy(tf.ones_like(real_pred), real_pred)
@@ -109,6 +111,6 @@ class GAN_MNIST(tf.keras.Model):
             zip(grads_of_discriminator, self.discriminator.trainable_variables))
 
         return gen_loss, disc_loss
-    
+
     def generate_images(self, noise_inputs):
         return self.generator(noise_inputs, training=False)

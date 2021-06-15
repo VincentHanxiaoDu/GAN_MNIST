@@ -5,7 +5,7 @@ import numpy as np
 from tqdm import tqdm
 
 
-def train_model(gan_mnist: GAN_MNIST, train_images, batch_size=256, epochs=50, 
+def train_model(gan_mnist: GAN_MNIST, train_images, batch_size=256, epochs=50,
                 load_weights=False):
     train_logger = logging.getLogger("Train")
     train_logger.setLevel(LOG_LEVEL)
@@ -36,6 +36,7 @@ def train_model(gan_mnist: GAN_MNIST, train_images, batch_size=256, epochs=50,
             f"Average discriminator loss of the epoch: {np.array(disc_loss).mean()}")
         gan_mnist.save_weights(CHECKPOINT_PREFIX)
     train_logger.info("Model trained successfully!")
+
 
 if __name__ == "__main__":
     # Load MNIST train images
